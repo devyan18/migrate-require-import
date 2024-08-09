@@ -1,4 +1,5 @@
 import { conectar } from "./database.js";
+import { validationResult } from "express-validator"
 
 export const mostrarTareas = async (req, res) => {
     const conexion = await conectar();
@@ -11,12 +12,13 @@ export const mostrarTareas = async (req, res) => {
 }
 
 export const agregarTarea = async (req, res) => {
-    const conexion = await conectar();
+    // const conexion = await conectar();
     const { title, description, isComplete } = req.body;
+
     if (typeof (title) != "string" || typeof (description) != "string" || typeof (isComplete) != "boolean") {
         res.send("ERROR Algun dato no cumple con los requisitos")
     } else {
-        const [consulta] = await conexion.query(`INSERT INTO tasks(title, description, isComplete) VALUES('${title}','${description}', ${isComplete})`);
+        // const [consulta] = await conexion.query(`INSERT INTO tasks(title, description, isComplete) VALUES('${title}','${description}', ${isComplete})`);
         res.send("Se agrego una tarea con exito");
     }
 }

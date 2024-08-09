@@ -10,8 +10,15 @@ import {
   agregarTarea
 } from "./controllers.js"
 
+import { validacionesDeTasks } from "./validations.js"
+import { applyValidations } from "./applyValidations.js"
+import { body } from "express-validator"
+
 taskRouter.get("/", mostrarTareas)
-taskRouter.post("/", agregarTarea)
+
+taskRouter.post("/",
+  validacionesDeTasks, applyValidations, agregarTarea)
+
 taskRouter.get("/:id", mostrarTarea)
 taskRouter.put("/:id", cambiarTarea)
 taskRouter.delete("/:id", borrarTarea)

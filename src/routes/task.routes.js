@@ -8,18 +8,15 @@ import {
   cambiarTarea,
   mostrarTarea,
   agregarTarea
-} from "./controllers.js"
+} from "../controllers/task.controller.js"
 
-import { validacionesDeTasks } from "./validations.js"
-import { applyValidations } from "./applyValidations.js"
-import { body } from "express-validator"
+import { createTaskValidation } from "../validations/task.validations.js"
+import { applyValidations } from "../middlewares/applyValidations.js"
 
 taskRouter.get("/", mostrarTareas)
 
-taskRouter.post("/",
-  validacionesDeTasks, applyValidations, agregarTarea)
-
 taskRouter.get("/:id", mostrarTarea)
+taskRouter.post("/", createTaskValidation, applyValidations, agregarTarea)
 taskRouter.put("/:id", cambiarTarea)
 taskRouter.delete("/:id", borrarTarea)
 

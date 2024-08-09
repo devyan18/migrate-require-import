@@ -1,6 +1,7 @@
 import { body } from "express-validator"
 
-export const validacionesDeTasks = [
+// POST /tasks
+export const createTaskValidation = [
   body("title")
     .isString().withMessage("El titulo debe ser un string")
     .notEmpty().withMessage("El titulo no puede estar vacio"),
@@ -12,7 +13,8 @@ export const validacionesDeTasks = [
     .notEmpty().withMessage("isComplete no puede estar vacio")
 ]
 
-export const validacionesDeTasksUpdate = [
+// PUT /tasks
+export const updateTaskValidation = [
   body("title")
     .optional() // permite no mandar el campo pero si lo mandas debe cumplir con las reglas
     .isString().withMessage("El titulo debe ser un string"),

@@ -1,5 +1,4 @@
-import { conectar } from "./database.js";
-import { validationResult } from "express-validator"
+import { conectar } from "../database.js";
 
 export const mostrarTareas = async (req, res) => {
     const conexion = await conectar();

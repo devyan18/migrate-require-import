@@ -1,11 +1,15 @@
 import { createConnection } from "mysql2/promise";
 
-const conectar = async (req, res) => {
+export const conectar = async () => {
+  try {
     return await createConnection({
-        host: "localhost",
-        user: "root",
-        password: "",
-        database: "tasks_db"
-    })
-}
-export { conectar }
+      host: "localhost",
+      user: "root",
+      password: "root",
+      database: "tasks_db",
+    });
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};

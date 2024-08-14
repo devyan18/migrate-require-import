@@ -1,59 +1,128 @@
 import { conectar } from "../database.js";
 
 export const mostrarTareas = async (req, res) => {
-    const conexion = await conectar();
-    const [consulta] = await conexion.query("SELECT * FROM TASKS")
-    if (consulta.length == 0) {
-        res.send("No hay tareas disponibles")
-    } else {
-        res.send(consulta);
-    }
-}
+  let conexion;
+
+  try {
+    conexion = await conectar();
+    const [consulta] = await conexion.query("SELECT * FROM TASKS");
+
+    res.status(200).json(consulta);
+  } catch (error) {
+    console.log(error);
+    res.send("Error al mostrar las tareas");
+  } finally {
+    await conexion.end();
+  }
+};
 
 export const agregarTarea = async (req, res) => {
-    // const conexion = await conectar();
+  let conexion;
+
+  try {
+    conexion = await conectar();
     const { title, description, isComplete } = req.body;
 
-    if (typeof (title) != "string" || typeof (description) != "string" || typeof (isComplete) != "boolean") {
-        res.send("ERROR Algun dato no cumple con los requisitos")
-    } else {
-        // const [consulta] = await conexion.query(`INSERT INTO tasks(title, description, isComplete) VALUES('${title}','${description}', ${isComplete})`);
-        res.send("Se agrego una tarea con exito");
+    const [consulta] = await conexion.query(
+      "INSERT INTO tasks(title, description, isComplete) VALUES(?, ?, ?)",
+      [title, description, isComplete]
+    );
+
+    if (consulta.affectedRows == 0) {
+      return res.send("No se pudo agregar la tarea");
     }
-}
+
+    res.status(201).send("Se agrego una tarea con exito");
+  } catch (error) {
+    console.log(error);
+    res.send("Error al agregar una tarea");
+  } finally {
+    await conexion.end();
+  }
+};
 
 export const mostrarTarea = async (req, res) => {
-    const conexion = await conectar();
+  let conexion;
+
+  try {
+    conexion = await conectar();
     const id = parseInt(req.params.id);
-    const [consulta] = await conexion.query(`SELECT * FROM TASKS WHERE id = ${id}`)
+
+    const [consulta] = await conexion.query(
+      "SELECT * FROM TASKS WHERE id = ?",
+      [id]
+    );
+
     if (consulta.length == 0) {
-        res.send("El id puesto no existe")
-    } else {
-        res.send(consulta);
+      return res.status(404).send("El id puesto no existe");
     }
-}
+
+    res.send(consulta);
+  } catch (error) {
+    console.log(error);
+    res.send("Error al mostrar la tarea");
+  } finally {
+    await conexion.end();
+  }
+};
 
 export const cambiarTarea = async (req, res) => {
-    const conexion = await conectar();
+  let conexion;
+
+  try {
+    conexion = await conectar();
     const id = parseInt(req.params.id);
+
     const { title, description, isComplete } = req.body;
-    const [consulta] = await conexion.query(`SELECT * FROM TASKS WHERE id = ${id}`);
-    if (typeof (title) != "string" || typeof (description) != "string" || typeof (isComplete) != "boolean" || consulta.length == []) {
-        res.send("ERROR Algun dato no cumple con los requisitos o el id puesto no existe")
-    } else {
-        const [consultaCambiar] = await conexion.query(`UPDATE tasks SET title = '${title}', description='${description}', isComplete=${isComplete} WHERE id = ${id}`)
-        res.send("Tarea editada con exito");
+
+    const [consultaCambiar] = await conexion.query(
+      "UPDATE tasks SET title = ?, description=?, isComplete=? WHERE id = ?",
+      [title, description, isComplete, id]
+    );
+
+    if (consultaCambiar.affectedRows == 0) {
+      return res.send("No se pudo editar la tarea");
     }
-}
+
+    res.status(201).send("Tarea editada con exito");
+  } catch (error) {
+    console.log(error);
+    res.send("Error al editar la tarea");
+
+    await conexion.end();
+  }
+};
 
 export const borrarTarea = async (req, res) => {
-    const conexion = await conectar();
+  let conexion;
+
+  try {
+    conexion = await conectar();
     const id = parseInt(req.params.id);
-    const [consulta] = await conexion.query(`SELECT * FROM TASKS WHERE id = ${id}`);
+
+    const [consulta] = await conexion.query(
+      "SELECT * FROM TASKS WHERE id = ?",
+      [id]
+    );
+
     if (consulta.length == []) {
-        res.send("El id puesto para borrar no existe")
-    } else {
-        const [consultaBorrar] = await conexion.query(`DELETE FROM TASKS WHERE id = ${id}`)
-        res.send("La tarea se borro con exito");
+      return res.send("El id puesto para borrar no existe");
     }
-}
+
+    const [consultaBorrar] = await conexion.query(
+      "DELETE FROM TASKS WHERE id = ?",
+      [id]
+    );
+
+    if (consultaBorrar.affectedRows == 0) {
+      return res.send("No se pudo borrar la tarea");
+    }
+
+    res.status(204).send("Tarea eliminada con exito");
+  } catch (error) {
+    console.log(error);
+    res.send("Error al borrar la tarea");
+  } finally {
+    await conexion.end();
+  }
+};

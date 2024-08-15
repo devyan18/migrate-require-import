@@ -1,6 +1,8 @@
 import { conn } from "../database.js";
 
 // ? se agrega _ para indicar que no se usara el req
+
+// GET /tasks
 export const mostrarTareas = async (_req, res) => {
   try {
     const [consulta] = await conn.query("SELECT * FROM tasks");
@@ -12,6 +14,7 @@ export const mostrarTareas = async (_req, res) => {
   }
 };
 
+// POST /tasks
 export const agregarTarea = async (req, res) => {
   try {
     const { title, description, isComplete } = req.body;
@@ -32,6 +35,7 @@ export const agregarTarea = async (req, res) => {
   }
 };
 
+// GET /tasks/:id
 export const mostrarTarea = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -51,6 +55,7 @@ export const mostrarTarea = async (req, res) => {
   }
 };
 
+// PUT /tasks/:id
 export const cambiarTarea = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -73,6 +78,7 @@ export const cambiarTarea = async (req, res) => {
   }
 };
 
+// DELETE /tasks/:id
 export const borrarTarea = async (req, res) => {
   try {
     const id = parseInt(req.params.id);

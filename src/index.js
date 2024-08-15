@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 
 import { taskRouter } from "./routes/task.routes.js";
+
 import { conn } from "./database.js";
 
 const app = express();
@@ -18,6 +19,7 @@ app.use("/tasks", taskRouter);
 // * este sea capturado por la propiedad 'err' y de esa
 // * manera proteger nuestro proceso principal.
 
+// ? (se agrega _ antes de las propiedades para indicar que no se usan)
 app.use((err, _req, res, _next) => {
   if (err) {
     console.log(err);

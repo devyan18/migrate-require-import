@@ -1,6 +1,4 @@
-// TODO: Función que parsea los errores de validación
-// TODO: para que sean más fáciles leer y entender.
-
+// TODO: Función que parsea los errores de validación para que sean más fáciles leer y entender.
 // ? Se utilizan en el middleware de validación "applyValidations.js"
 
 export function errorParser(errorObject) {

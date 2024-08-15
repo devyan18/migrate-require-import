@@ -10,7 +10,11 @@ export const mostrarTareas = async (_req, res) => {
     res.status(200).json(consulta);
   } catch (error) {
     console.log(error);
-    res.send("Error al mostrar las tareas");
+    res.status(500).json({
+      status: "error",
+      ok: false,
+      message: "Error al mostrar las tareas",
+    });
   }
 };
 
@@ -28,10 +32,18 @@ export const agregarTarea = async (req, res) => {
       return res.send("No se pudo agregar la tarea");
     }
 
-    res.status(201).send("Se agrego una tarea con exito");
+    res.status(201).json({
+      status: "success",
+      ok: true,
+      message: "Tarea agregada con exito",
+    });
   } catch (error) {
     console.log(error);
-    res.send("Error al agregar una tarea");
+    res.status(500).json({
+      status: "error",
+      ok: false,
+      message: "Error al agregar la tarea",
+    });
   }
 };
 
@@ -45,13 +57,21 @@ export const mostrarTarea = async (req, res) => {
     ]);
 
     if (consulta.length == 0) {
-      return res.status(404).send("El id puesto no existe");
+      return res.status(404).json({
+        status: "error",
+        ok: false,
+        message: "No se encontro la tarea",
+      });
     }
 
-    res.send(consulta);
+    res.status(200).json(consulta);
   } catch (error) {
     console.log(error);
-    res.send("Error al mostrar la tarea");
+    res.status(500).json({
+      status: "error",
+      ok: false,
+      message: "Error al mostrar la tarea",
+    });
   }
 };
 
@@ -68,13 +88,25 @@ export const cambiarTarea = async (req, res) => {
     );
 
     if (consultaCambiar.affectedRows == 0) {
-      return res.send("No se pudo editar la tarea");
+      return res.status(500).json({
+        status: "error",
+        ok: false,
+        message: "No se pudo editar la tarea",
+      });
     }
 
-    res.status(201).send("Tarea editada con exito");
+    res.status(200).json({
+      status: "success",
+      ok: true,
+      message: "Tarea editada con exito",
+    });
   } catch (error) {
     console.log(error);
-    res.send("Error al editar la tarea");
+    res.status(500).json({
+      status: "error",
+      ok: false,
+      message: "Error al editar la tarea",
+    });
   }
 };
 
@@ -97,12 +129,24 @@ export const borrarTarea = async (req, res) => {
     );
 
     if (consultaBorrar.affectedRows == 0) {
-      return res.send("No se pudo borrar la tarea");
+      return res.status(500).json({
+        status: "error",
+        ok: false,
+        message: "No se pudo borrar la tarea",
+      });
     }
 
-    res.status(204).send("Tarea eliminada con exito");
+    res.status(204).json({
+      status: "success",
+      ok: true,
+      message: "Tarea borrada con exito",
+    });
   } catch (error) {
     console.log(error);
-    res.send("Error al borrar la tarea");
+    res.status(500).json({
+      status: "error",
+      ok: false,
+      message: "Error al borrar la tarea",
+    });
   }
 };

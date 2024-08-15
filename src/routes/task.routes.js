@@ -16,7 +16,7 @@ import {
   updateTaskValidation,
 } from "../validations/task.validations.js";
 
-import { applyValidations } from "../middlewares/applyValidations.js";
+import { applyValidations } from "../middlewares/validations.middleware.js";
 
 taskRouter.get("/", mostrarTareas);
 

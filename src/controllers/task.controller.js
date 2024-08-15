@@ -1,29 +1,22 @@
-import { conectar } from "../database.js";
+import { conn } from "../database.js";
 
-export const mostrarTareas = async (req, res) => {
-  let conexion;
-
+// ? se agrega _ para indicar que no se usara el req
+export const mostrarTareas = async (_req, res) => {
   try {
-    conexion = await conectar();
-    const [consulta] = await conexion.query("SELECT * FROM TASKS");
+    const [consulta] = await conn.query("SELECT * FROM tasks");
 
     res.status(200).json(consulta);
   } catch (error) {
     console.log(error);
     res.send("Error al mostrar las tareas");
-  } finally {
-    await conexion.end();
   }
 };
 
 export const agregarTarea = async (req, res) => {
-  let conexion;
-
   try {
-    conexion = await conectar();
     const { title, description, isComplete } = req.body;
 
-    const [consulta] = await conexion.query(
+    const [consulta] = await conn.query(
       "INSERT INTO tasks(title, description, isComplete) VALUES(?, ?, ?)",
       [title, description, isComplete]
     );
@@ -36,22 +29,16 @@ export const agregarTarea = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.send("Error al agregar una tarea");
-  } finally {
-    await conexion.end();
   }
 };
 
 export const mostrarTarea = async (req, res) => {
-  let conexion;
-
   try {
-    conexion = await conectar();
     const id = parseInt(req.params.id);
 
-    const [consulta] = await conexion.query(
-      "SELECT * FROM TASKS WHERE id = ?",
-      [id]
-    );
+    const [consulta] = await conn.query("SELECT * FROM tasks WHERE id = ?", [
+      id,
+    ]);
 
     if (consulta.length == 0) {
       return res.status(404).send("El id puesto no existe");
@@ -61,21 +48,16 @@ export const mostrarTarea = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.send("Error al mostrar la tarea");
-  } finally {
-    await conexion.end();
   }
 };
 
 export const cambiarTarea = async (req, res) => {
-  let conexion;
-
   try {
-    conexion = await conectar();
     const id = parseInt(req.params.id);
 
     const { title, description, isComplete } = req.body;
 
-    const [consultaCambiar] = await conexion.query(
+    const [consultaCambiar] = await conn.query(
       "UPDATE tasks SET title = ?, description=?, isComplete=? WHERE id = ?",
       [title, description, isComplete, id]
     );
@@ -88,29 +70,23 @@ export const cambiarTarea = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.send("Error al editar la tarea");
-
-    await conexion.end();
   }
 };
 
 export const borrarTarea = async (req, res) => {
-  let conexion;
-
   try {
-    conexion = await conectar();
     const id = parseInt(req.params.id);
 
-    const [consulta] = await conexion.query(
-      "SELECT * FROM TASKS WHERE id = ?",
-      [id]
-    );
+    const [consulta] = await conn.query("SELECT * FROM tasks WHERE id = ?", [
+      id,
+    ]);
 
     if (consulta.length == []) {
       return res.send("El id puesto para borrar no existe");
     }
 
-    const [consultaBorrar] = await conexion.query(
-      "DELETE FROM TASKS WHERE id = ?",
+    const [consultaBorrar] = await conn.query(
+      "DELETE FROM tasks WHERE id = ?",
       [id]
     );
 
@@ -122,7 +98,5 @@ export const borrarTarea = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.send("Error al borrar la tarea");
-  } finally {
-    await conexion.end();
   }
 };

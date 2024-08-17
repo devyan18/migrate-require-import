@@ -23,20 +23,21 @@ export const agregarTarea = async (req, res) => {
   try {
     const { title, description, isComplete } = req.body;
 
-    const [consulta] = await conn.query(
+    const [result] = await conn.query(
       "INSERT INTO tasks(title, description, isComplete) VALUES(?, ?, ?)",
       [title, description, isComplete]
     );
 
-    if (consulta.affectedRows == 0) {
+    if (result.affectedRows === 0) {
       return res.send("No se pudo agregar la tarea");
     }
 
-    res.status(201).json({
-      status: "success",
-      ok: true,
-      message: "Tarea agregada con exito",
-    });
+    const [newTask] = await conn.query(
+      "SELECT * FROM tasks WHERE id = ? LIMIT 1",
+      [result.insertId]
+    );
+
+    res.status(201).json(newTask[0]);
   } catch (error) {
     console.log(error);
     res.status(500).json({
